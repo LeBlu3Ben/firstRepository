@@ -1,0 +1,135 @@
+<title>
+  Day Party
+</title>
+
+
+
+
+
+
+<body>
+  <style>
+     body {
+  height: 100vh;
+  width: 100vw;
+  background-color: black;
+  margin: 0rem;
+  overflow: hidden;
+}
+
+#image-track {
+  display: flex;
+  gap: 4vmin;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(0%, -50%); 
+  user-select: none; /* -- Prevent image highlighting -- */
+}
+
+#image-track > .image {
+  width: 40vmin;
+  height: 56vmin;
+  object-fit: cover;
+  object-position: 100% center;
+}
+    /* ... The existing CSS styles ... */
+    .image-container {
+      text-align: center;
+    }
+
+    .image-text {
+      color: white;
+      font-size: 1.2rem;
+      margin-top: 1rem;
+    }
+  </style>
+</body>
+
+<div id="image-track" data-mouse-down-at="0" data-prev-percentage="0">
+  <!-- Each image now has an image container containing the image and text -->
+  <div class="image-container">
+    <img class="image" src="https://static.spotapps.co/spots/07/b2c78076f74ddb99923157841ef8a1/medium" draggable="false" />
+    <div class="image-text">Mango Salad $14.95</div>
+  </div>
+
+  <div class="image-container">
+    <img class="image" src="https://static.spotapps.co/spots/a8/c455d59a884744ba3a609bd557447a/medium" draggable="false" />
+    <div class="image-text">Image 2</div>
+  </div>
+  <div class="image-container">
+    <img class="image" src="https://static.spotapps.co/spots/75/d0c52c1e354e7484199ea9666fd5d8/medium" draggable="false" />
+    <div class="image-text">anything i want to type</div>
+  </div>
+
+  <div class="image-container">
+    <img class="image" src="https://static.spotapps.co/spots/70/2a67f33dcd415d978d3a205690e0a2/medium" draggable="false" />
+    <div class="image-text">Image 4</div>
+  </div>
+
+  <div class="image-container">
+    <img class="image" src="https://static.spotapps.co/spots/e0/985228668749028b06be9422714ccc/medium" draggable="false" />
+    <div class="image-text">fuck u</div>
+  </div>
+
+  <div class="image-container">
+    <img class="image" src="https://static.spotapps.co/spots/15/f591cf1fa64420b3620c62bdde5996/medium" draggable="false" />
+    <div class="image-text">image 6</div>
+  </div>
+
+  <div class="image-container">
+    <img class="image" src="https://static.spotapps.co/spots/7c/accd1ae1084879901961009297e924/medium" draggable="false" />
+    <div class="image-text">pissa</div>
+  </div>
+
+
+<!-- The existing JavaScript code ... -->
+<script>
+  const track = document.getElementById("image-track");
+
+const handleOnDown = e => track.dataset.mouseDownAt = e.clientX;
+
+const handleOnUp = () => {
+  track.dataset.mouseDownAt = "0";  
+  track.dataset.prevPercentage = track.dataset.percentage;
+}
+
+const handleOnMove = e => {
+  if(track.dataset.mouseDownAt === "0") return;
+  
+  const mouseDelta = parseFloat(track.dataset.mouseDownAt) - e.clientX,
+        maxDelta = window.innerWidth / 2;
+  
+  const percentage = (mouseDelta / maxDelta) * -100,
+        nextPercentageUnconstrained = parseFloat(track.dataset.prevPercentage) + percentage,
+        nextPercentage = Math.max(Math.min(nextPercentageUnconstrained, 0), -100);
+  
+  track.dataset.percentage = nextPercentage;
+  
+  track.animate({
+    transform: `translate(${nextPercentage}%, -50%)`
+  }, { duration: 1200, fill: "forwards" });
+  
+  for(const image of track.getElementsByClassName("image")) {
+    image.animate({
+      objectPosition: `${100 + nextPercentage}% center`
+    }, { duration: 1200, fill: "forwards" });
+  }
+}
+
+/* -- Had to add extra lines for touch events -- */
+
+window.onmousedown = e => handleOnDown(e);
+
+window.ontouchstart = e => handleOnDown(e.touches[0]);
+
+window.onmouseup = e => handleOnUp(e);
+
+window.ontouchend = e => handleOnUp(e.touches[0]);
+
+window.onmousemove = e => handleOnMove(e);
+
+window.ontouchmove = e => handleOnMove(e.touches[0]);
+</script>
+
+</script>
